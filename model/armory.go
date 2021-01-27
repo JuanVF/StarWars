@@ -1,5 +1,7 @@
 package model
 
+import "github.com/JuanVF/StarWars/utils"
+
 type Armory struct {
 	owner         *Player
 	price         int64
@@ -22,7 +24,13 @@ func (a *Armory) OnHit(player *Player) {
 
 // Funciones de la interfaz iFactory
 func (a *Armory) DoAction() {
-
+	switch a.componentType {
+	case utils.BOMB:
+	case utils.MISSILE:
+	case utils.COMBOSHOT:
+	case utils.MULTISHOT:
+	default:
+	}
 }
 
 // Funciones de la interfaz iComponent
