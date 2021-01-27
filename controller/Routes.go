@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/JuanVF/StarWars/model"
 	"github.com/JuanVF/StarWars/utils"
 	"github.com/gorilla/websocket"
 )
@@ -12,7 +13,7 @@ import (
 var SERVER_PORT = ":3000"
 var LoginUpgrader = websocket.Upgrader{}
 
-var Clients = make(map[*websocket.Conn]bool)
+var Clients = make(map[*websocket.Conn]*model.Player)
 var Broadcast = make(chan *NetworkPackage)
 
 var MAX_USERS = -1
@@ -47,16 +48,23 @@ func HandlerLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Clients[ws] = true
+	Clients[ws] = &model.Player{}
 
 	log.Printf(utils.ReadUserIP(r) + ", Se ha conectado...")
-	log.Printf("Cantidad de usuario: #%d", len(Clients))
+	log.Printf("Cantidad de usuarios: #%d", len(Clients))
 
 	// Si solo hay un cliente conectado el va a ser admin
 	if len(Clients) == 1 {
 		AssignAdmin(ws)
+	} else {
+		AssignPlayer(ws)
 	}
 
+	PlayerListener(ws)
+}
+
+// Listener para escuchar los mensajes del jugador
+func PlayerListener(ws *websocket.Conn) {
 	for {
 		var message Message
 
@@ -75,6 +83,7 @@ func HandlerLogin(w http.ResponseWriter, r *http.Request) {
 
 		Broadcast <- CreatePackageMsg(&message, ws)
 	}
+
 }
 
 // Aqui se distribuyen los mensajes
@@ -86,11 +95,11 @@ func BroadcastHandler() {
 			continue
 		}
 
-		if !msg.Response {
+		pack := CreatePackage(msg, msg.To)
+
+		if !pack.Response || pack.Msg == nil {
 			continue
 		}
-
-		pack := CreatePackage(msg, msg.To)
 
 		if pack.To == nil {
 			SendToAll(pack.Msg)

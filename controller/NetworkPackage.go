@@ -35,13 +35,9 @@ func CreatePackage(msg *NetworkPackage, client *websocket.Conn) *NetworkPackage 
 		pack.To = client
 		pack.Response = true
 	case utils.CREATE_PLAYER:
-		pack.Msg = &Message{
-			IdMessage: "STARTED",
-		}
-		pack.To = nil
-		pack.Response = true
-
 		CreatePlayer(msg)
+		pack.Response = false
+		pack.To = nil
 	default:
 		return nil
 	}
@@ -55,13 +51,18 @@ func CreatePackageMsg(msg *Message, client *websocket.Conn) *NetworkPackage {
 
 	switch msg.IdMessage {
 	case "ADMIN":
+		MAX_USERS = int(msg.Number)
+
+		go StartListener()
+
 		pack.ID = utils.LOGIN
 		pack.To = client
 		pack.Response = true
 	case "REQUESTDATA":
 		pack.ID = utils.CREATE_PLAYER
-		pack.To = nil
+		pack.To = client
 		pack.Response = true
+		pack.Msg = msg
 	default:
 		return nil
 	}

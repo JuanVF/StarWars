@@ -2,11 +2,11 @@ package utils
 
 // Enumerables para los componentes
 const (
-	WORLD     = iota
+	ARMORY    = iota
 	CONNECTOR = iota
 	MARKET    = iota
 	MINE      = iota
-	ARMORY    = iota
+	WORLD     = iota
 	TEMPLE    = iota
 )
 

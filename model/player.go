@@ -1,6 +1,7 @@
 package model
 
 type Player struct {
+	Name           string
 	Money          int64
 	Steel          int64
 	HasShield      bool
