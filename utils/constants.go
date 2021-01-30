@@ -24,4 +24,7 @@ const (
 	FIRST_USER    = iota
 	LOGIN         = iota
 	CREATE_PLAYER = iota
+	SEND_MATRIX   = iota
+	SEND_GRAPH    = iota
+	REQUEST_TURN  = iota
 )

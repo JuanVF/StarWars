@@ -38,6 +38,35 @@ func CreatePackage(msg *NetworkPackage, client *websocket.Conn) *NetworkPackage 
 		CreatePlayer(msg)
 		pack.Response = false
 		pack.To = nil
+	case utils.SEND_MATRIX:
+		msg := Message{
+			IdMessage: "RECEIVEMATRIX",
+			Matrix:    Clients[client].GetMatrix(),
+		}
+
+		pack.To = client
+		pack.Response = true
+		pack.Msg = &msg
+	case utils.SEND_GRAPH:
+		msg := Message{
+			IdMessage: "RECEIVEPOINTS",
+			Numbers:   Clients[client].GetGraphPoints(),
+		}
+
+		pack.To = client
+		pack.Response = true
+		pack.Msg = &msg
+	case utils.REQUEST_TURN:
+		if !AlreadySettingTurn {
+			AlreadySettingTurn = true
+
+			go WaitToAssign()
+		}
+
+		SettingTurnBroadcast <- true
+
+		pack.Response = false
+		pack.To = nil
 	default:
 		return nil
 	}
@@ -60,6 +89,21 @@ func CreatePackageMsg(msg *Message, client *websocket.Conn) *NetworkPackage {
 		pack.Response = true
 	case "REQUESTDATA":
 		pack.ID = utils.CREATE_PLAYER
+		pack.To = client
+		pack.Response = true
+		pack.Msg = msg
+	case "STARTED":
+		pack.ID = utils.SEND_MATRIX
+		pack.To = client
+		pack.Response = true
+		pack.Msg = msg
+	case "SEND_MATRIX":
+		pack.ID = utils.SEND_GRAPH
+		pack.To = client
+		pack.Response = true
+		pack.Msg = msg
+	case "REQUEST_TURN":
+		pack.ID = utils.REQUEST_TURN
 		pack.To = client
 		pack.Response = true
 		pack.Msg = msg

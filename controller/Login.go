@@ -47,6 +47,8 @@ func CreatePlayer(pack *NetworkPackage) {
 	fmt.Println("Generando grafos:")
 	Clients[pack.To].GenerateGraph()
 
+	Clients[pack.To].GetGraphPoints()
+
 	fmt.Printf("\n\n")
 
 	StartBroadcast <- 1

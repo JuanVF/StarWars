@@ -136,9 +136,93 @@ func (p *Player) ConnectComponents(components, connectors map[GameObject]utils.P
 	}
 }
 
+// Devuelve la matriz de un jugador
+func (p *Player) GetMatrix() [][]float64 {
+	var matrix [][]float64
+
+	for i := 0; i < len(p.Matrix); i++ {
+		matrix = append(matrix, []float64{})
+
+		for j := 0; j < len(p.Matrix[i]); j++ {
+			var val float64 = -1
+
+			if p.Matrix[i][j] != nil {
+				val = float64(p.Matrix[i][j].GetType())
+			}
+
+			matrix[i] = append(matrix[i], float64(val))
+		}
+	}
+
+	return matrix
+}
+
 // Aqui vamos a retornar los puntos que el cliente necesita para dibujar las lineas
-// Formato: {x0, y0, x1, y1, ..., xn, xn+1, xn+2, x+3}
+// Formato: {col0, fila0, col1, fila1, ..., xn, xn+1, xn+2, x+3}
 func (p *Player) GetGraphPoints() []float64 {
+	cache := make(map[GameObject][]float64)
+	points := []float64{}
+
+	for col := 0; col < len(p.Matrix); col++ {
+		for row := 0; row < len(p.Matrix[col]); row++ {
+			var object GameObject = p.Matrix[col][row]
+			pos := []float64{float64(col), float64(row)}
+
+			// Nos saltamos los espacios vacios
+			if object == nil {
+				continue
+			}
+
+			// Si esta en cache lo obtenemos de ahi, sino lo guardamos en cache
+			// Esto para hacer busquedas mas rapidas
+			if cache[object] != nil {
+				pos = cache[object]
+			} else {
+				cache[object] = pos
+			}
+
+			// Agregamos los puntos
+			relations := object.GetRelations()
+
+			for i := 0; i < len(relations); i++ {
+				tmpPos := []float64{}
+
+				// Obtenemos la posicion de un objeto en la matriz
+				if cache[relations[i]] != nil {
+					tmpPos = cache[relations[i]]
+				} else {
+					tmpPos = p.GetByPosition(relations[i])
+					cache[relations[i]] = tmpPos
+				}
+
+				// Agregamos las posiciones
+				points = append(points, pos...)
+				points = append(points, tmpPos...)
+			}
+		}
+	}
+
+	fmt.Println("Puntos para el front:")
+	fmt.Println(points)
+
+	return points
+}
+
+// Dado un componente obtenemos sus puntos con respecot a sus relaciones
+//func (p *Player) GetComponentPoints(col, row float64, object GameObject) []float64 {
+//}
+
+// Dado un jugador retorna en que posicion de la matriz esta
+// Formato: {col0, fila0}
+func (p *Player) GetByPosition(obj GameObject) []float64 {
+	for col := 0; col < len(p.Matrix); col++ {
+		for row := 0; row < len(p.Matrix[col]); row++ {
+			if p.Matrix[col][row] == obj {
+				return []float64{float64(col), float64(row)}
+			}
+		}
+	}
+
 	return nil
 }
 
