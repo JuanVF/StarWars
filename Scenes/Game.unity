@@ -385,7 +385,11 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1325208555}
   m_Direction: 0
   m_Value: 1
+<<<<<<< HEAD
+  m_Size: 1
+=======
   m_Size: 0.99999994
+>>>>>>> refs/remotes/origin/cliente
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -760,7 +764,11 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
+<<<<<<< HEAD
+  m_AnchoredPosition: {x: 0, y: -0.000015258789}
+=======
   m_AnchoredPosition: {x: 0, y: 0}
+>>>>>>> refs/remotes/origin/cliente
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &357471461
@@ -1764,6 +1772,49 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 973022405}
   m_CullTransparentMesh: 0
+--- !u!1 &1033127124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1033127126}
+  - component: {fileID: 1033127125}
+  m_Layer: 0
+  m_Name: Testing
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1033127125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1033127124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 901838fee396fb642b059839241fe27b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1033127126
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1033127124}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.062529, y: 26.062605, z: -12.944939}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1161364073
 GameObject:
   m_ObjectHideFlags: 0
@@ -2389,7 +2440,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 991312}
   m_HandleRect: {fileID: 991311}
   m_Direction: 2
-  m_Value: 0.9999997
+  m_Value: 1
   m_Size: 0.62420166
   m_NumberOfSteps: 0
   m_OnValueChanged:
