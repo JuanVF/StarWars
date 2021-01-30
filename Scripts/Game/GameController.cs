@@ -12,15 +12,23 @@ public class GameController : MonoBehaviour
     private Text currentTurn;
 
     private GameObject chatContainer;
+    private Button chatButton;
+    private Text chatText;
 
     void Start()
     {
         playerTurn = GameObject.Find("PlayerTurn").GetComponent<Text>();
         currentTurn = GameObject.Find("CurrentTurn").GetComponent<Text>();
+        chatButton = GameObject.Find("ChatButton").GetComponent<Button>();
+        chatText = GameObject.Find("ChatText").GetComponent<Text>();
 
         chatContainer = GameObject.Find("ChatContainer");
 
         notifyServer();
+
+        chatButton.onClick.AddListener(delegate {
+            OnBtnChatClicked();
+        });
     }
 
     void Update()
@@ -43,6 +51,18 @@ public class GameController : MonoBehaviour
 
             Network.chatMessage = "";
         }
+    }
+
+    private void OnBtnChatClicked()
+    {
+        if (chatText.text == "")
+        {
+            AddChatMessage("Tu mensaje esta vacio...");
+
+            return;
+        }
+
+        Network.getInstance().SendChatMessage(chatText.text);
     }
 
     private void AddChatMessage(string message)

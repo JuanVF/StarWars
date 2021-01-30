@@ -167,6 +167,12 @@ public class Network
                 }
 
                 break;
+            case "CHAT":
+                Debug.Log("Server: Mensaje = " + messageAvailable.text);
+
+                chatMessage = messageAvailable.text;
+
+                break;
             default:
                 Debug.Log("Mensaje recibido no soportado...");
                 break;
@@ -197,7 +203,7 @@ public class Network
     {
         Message message = new Message
         {
-            username = name, // Lo cambiaremos cuando agregue un login funcional
+            username = name,
             text = msg,
             idMessage = "CHAT"
         };
