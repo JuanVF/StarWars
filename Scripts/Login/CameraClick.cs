@@ -6,18 +6,20 @@ public class CameraClick : MonoBehaviour
 {
     ComponentGenerator generator;
 
+    private bool alreadyGenerated = false;
+
+    private GameObject gameContainer;
+
     private void Start()
     {
         generator = GameObject.Find("Generator").GetComponent<ComponentGenerator>();
-
-        // Generamos un mundo aleatorio
-        GameObject test = new GameObject();
-
-        // Generamos un mercado aleatorio
+        gameContainer = GameObject.Find("Game");
     }
 
     void Update()
     {
+        if (!alreadyGenerated) GenerateInitialComponents();
+
         if (!Input.GetMouseButtonDown(0))
             return;
 
@@ -31,6 +33,29 @@ public class CameraClick : MonoBehaviour
                 Clicked(hit.transform.gameObject);
             }
         }
+    }
+
+    private void GenerateInitialComponents()
+    {
+        // Generamos un mundo aleatorio
+        ComponentGenerator.selectedComponent = 4;
+        GameObject t1 = ComponentGenerator.matrix[Random.Range(0, 12), Random.Range(0, 12)];
+        ClickedTile(t1);
+
+        // Generamos un mercado aleatorio
+        ComponentGenerator.selectedComponent = 2;
+        GameObject t2 = ComponentGenerator.matrix[Random.Range(0, 12), Random.Range(0, 12)];
+        ClickedTile(t2);
+
+        alreadyGenerated = true;
+
+        // Testeamos la linea
+        GameObject line = (GameObject)Instantiate(Resources.Load("Line"), gameContainer.transform);
+
+        LineRenderer lineR = line.GetComponent<LineRenderer>();
+
+        lineR.SetPosition(0, t1.transform.position);
+        lineR.SetPosition(1, t2.transform.position);
     }
 
     private void Clicked(GameObject gameObject)

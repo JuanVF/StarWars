@@ -15,6 +15,8 @@ public class Network
     private static bool isConnected = false;
 
     public static string name { get; set; }
+    public static float money = 4000;
+
     public static float[,] matrix { get; set; }
     public static int amount_users = 2;
 
@@ -123,14 +125,20 @@ public class Network
                 break;
             case "RECEIVEPOINTS":
                 Debug.Log("Recibiendo puntos de grafos...");
+                Debug.Log("Puntos recibidos: " + messageAvailable.numbers.Length);
+                string points = "[ ";
 
                 graphConnections = messageAvailable.numbers;
 
                 //  Imprimos los puntos recibidos...
-                for (int i = 0; i < graphConnections.Length; i++)
+                for (int i = 0; i < messageAvailable.numbers.Length; i++)
                 {
-                    Debug.Log(graphConnections[i]);
+                    points += " [ " + graphConnections[i] + " ] ";
                 }
+
+                points += " ]";
+
+                Debug.Log(points);
 
                 message = new Message
                 {
