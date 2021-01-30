@@ -35,8 +35,6 @@ public class EnemyGrid : MonoBehaviour
 
         ComponentsContainer = GameObject.Find("EnemyGrid").GetComponent<Transform>();
 
-        GenerateComponents();
-
         GenerateMatrix();
     }
 
@@ -52,11 +50,11 @@ public class EnemyGrid : MonoBehaviour
         for (int row = 0; row < rows; row++)
             for (int col = 0; col < cols; col++)
             {
-                GameObject tile = Instantiate(reference, transform);
+                GameObject tile = Instantiate(reference, ComponentsContainer);
                 Point point = tile.GetComponent<Point>();
 
-                float posX = col * tileSize;
-                float posY = row * tileSize;
+                float posX = col * tileSize + ComponentsContainer.position.x;
+                float posY = row * tileSize + ComponentsContainer.position.y;
 
                 tile.transform.position = new Vector2(posX, posY);
 
@@ -74,33 +72,4 @@ public class EnemyGrid : MonoBehaviour
 
         Destroy(reference);
     }
-
-    // Genera la lista de componentes disponibles
-    private void GenerateComponents()
-    {
-        GameObject reference = (GameObject)Instantiate(Resources.Load("Component"));
-
-        for (int i = 0; i < ComponentImages.Length; i++)
-        {
-            GameObject component = Instantiate(reference, ComponentsContainer);
-
-            Text name = component.transform.Find("ComponentName").GetComponent<Text>();
-            Image image = component.transform.Find("ComponentImage").GetComponent<Image>();
-            Button button = component.transform.Find("ComponentButton").GetComponent<Button>();
-
-            name.text = ComponentNames[i];
-            image.sprite = ComponentImages[i];
-
-            int tmpIndex = i;
-
-            button.onClick.AddListener(delegate {
-                selectedComponent = tmpIndex;
-            });
-        }
-
-        Destroy(reference);
-    }
-
-
-
 }

@@ -48,14 +48,6 @@ public class CameraClick : MonoBehaviour
         ClickedTile(t2);
 
         alreadyGenerated = true;
-
-        // Testeamos la linea
-        GameObject line = (GameObject)Instantiate(Resources.Load("Line"), gameContainer.transform);
-
-        LineRenderer lineR = line.GetComponent<LineRenderer>();
-
-        lineR.SetPosition(0, t1.transform.position);
-        lineR.SetPosition(1, t2.transform.position);
     }
 
     private void Clicked(GameObject gameObject)
