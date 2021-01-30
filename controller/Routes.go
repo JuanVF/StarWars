@@ -19,6 +19,8 @@ var Broadcast = make(chan *NetworkPackage)
 var MAX_USERS = -1
 
 func StartServer() error {
+	fmt.Println("Servidor iniciado en: " + SERVER_PORT)
+
 	// Servimos la ruta para loggearse
 	http.HandleFunc("/api/login", HandlerLogin)
 

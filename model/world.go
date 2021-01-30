@@ -1,16 +1,19 @@
 package model
 
-import "github.com/JuanVF/StarWars/utils"
+import (
+	"github.com/JuanVF/StarWars/utils"
+)
 
 type World struct {
 	owner         *Player
 	price         int64
 	componentType int64
 	Size          utils.Point
+	relations     []GameObject
 }
 
 // Funciones de la interfaz iGameObject
-func (w World) OnStart() {
+func (w *World) OnStart() {
 	w.SetPrice(12000)
 
 	w.Size = utils.Point{
@@ -21,35 +24,49 @@ func (w World) OnStart() {
 	w.SetType(utils.WORLD)
 }
 
-func (w World) Run() {
+func (w *World) Run() {
 
 }
 
-func (w World) OnHit(player *Player) {
+func (w *World) OnHit(player *Player) {
 	w.owner.RemoveObject(w)
 }
 
+func (w *World) GetSize() utils.Point {
+	return w.Size
+}
+
+// Agrega una relacion con otro objeto de la matriz
+func (w *World) AddRelation(obj GameObject) {
+	w.relations = append(w.relations, obj)
+}
+
+// Retorna las relaciones que tiene un objeto con otro de la matriz
+func (w *World) GetRelations() []GameObject {
+	return w.relations
+}
+
 // Funciones de la interfaz iComponent
-func (w World) SetPrice(int64) {
+func (w *World) SetPrice(int64) {
 
 }
 
-func (w World) GetPrice() int64 {
+func (w *World) GetPrice() int64 {
 	return w.price
 }
 
-func (w World) SetPlayer(owner *Player) {
+func (w *World) SetPlayer(owner *Player) {
 
 }
 
-func (w World) GetPlayer() *Player {
+func (w *World) GetPlayer() *Player {
 	return w.owner
 }
 
-func (w World) GetType() int64 {
+func (w *World) GetType() int64 {
 	return w.componentType
 }
 
-func (w World) SetType(ComponentType int64) {
-
+func (w *World) SetType(ComponentType int64) {
+	w.componentType = ComponentType
 }

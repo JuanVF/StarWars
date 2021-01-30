@@ -1,25 +1,28 @@
 package model
 
-import "github.com/JuanVF/StarWars/utils"
+import (
+	"github.com/JuanVF/StarWars/utils"
+)
 
 type Market struct {
 	owner         *Player
 	price         int64
 	componentType int64
 	Size          utils.Point
+	relations     []GameObject
 }
 
 // Funciones de la estructura
-func (m Market) Sell(gunType int64) (int64, error) {
+func (m *Market) Sell(gunType int64) (int64, error) {
 	return 0, nil
 }
 
-func (m Market) Buy(gunType, amount int64) error {
+func (m *Market) Buy(gunType, amount int64) error {
 	return nil
 }
 
 // Funciones de la interfaz iGameObject
-func (m Market) OnStart() {
+func (m *Market) OnStart() {
 	m.SetPrice(2000)
 
 	m.Size = utils.Point{
@@ -30,40 +33,54 @@ func (m Market) OnStart() {
 	m.SetType(utils.MARKET)
 }
 
-func (m Market) Run() {
+func (m *Market) Run() {
 
 }
 
-func (m Market) OnHit(player *Player) {
+func (m *Market) OnHit(player *Player) {
 
+}
+
+func (m *Market) GetSize() utils.Point {
+	return m.Size
+}
+
+// Agrega una relacion con otro objeto de la matriz
+func (m *Market) AddRelation(obj GameObject) {
+	m.relations = append(m.relations, obj)
+}
+
+// Retorna las relaciones que tiene un objeto con otro de la matriz
+func (m *Market) GetRelations() []GameObject {
+	return m.relations
 }
 
 // Funciones de la interfaz iFactory
-func (m Market) DoAction() {
+func (m *Market) DoAction() {
 
 }
 
 // Funciones de la interfaz iComponent
-func (m Market) SetPrice(int64) {
+func (m *Market) SetPrice(int64) {
 
 }
 
-func (m Market) GetPrice() int64 {
+func (m *Market) GetPrice() int64 {
 	return m.price
 }
 
-func (m Market) SetPlayer(owner *Player) {
+func (m *Market) SetPlayer(owner *Player) {
 
 }
 
-func (m Market) GetPlayer() *Player {
+func (m *Market) GetPlayer() *Player {
 	return m.owner
 }
 
-func (m Market) GetType() int64 {
+func (m *Market) GetType() int64 {
 	return m.componentType
 }
 
-func (m Market) SetType(ComponentType int64) {
-
+func (m *Market) SetType(ComponentType int64) {
+	m.componentType = ComponentType
 }

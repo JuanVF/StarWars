@@ -2,12 +2,13 @@ package utils
 
 // Enumerables para los componentes
 const (
-	ARMORY    = iota
-	CONNECTOR = iota
-	MARKET    = iota
-	MINE      = iota
-	WORLD     = iota
-	TEMPLE    = iota
+	ARMORY     = iota
+	CONNECTOR  = iota
+	MARKET     = iota
+	MINE       = iota
+	WORLD      = iota
+	TEMPLE     = iota
+	BLACK_HOLE = iota
 )
 
 // Enumerables para los disparos

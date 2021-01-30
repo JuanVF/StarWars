@@ -1,10 +1,16 @@
 package model
 
+import "github.com/JuanVF/StarWars/utils"
+
 // Esto representa cualquier cosa en la matriz
 type GameObject interface {
 	OnStart()
 	Run()
 	OnHit(player *Player)
+	GetSize() utils.Point
+	GetType() int64
+	AddRelation(obj GameObject)
+	GetRelations() []GameObject
 }
 
 // Estos son los componentes de juego

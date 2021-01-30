@@ -12,6 +12,7 @@ type Mine struct {
 	time          int64
 	currentTime   int64
 	componentType int64
+	relations     []GameObject
 }
 
 // Funciones de la mina
@@ -52,6 +53,20 @@ func (m *Mine) OnHit(player *Player) {
 	m.owner.RemoveObject(m)
 }
 
+func (m *Mine) GetSize() utils.Point {
+	return m.Size
+}
+
+// Agrega una relacion con otro objeto de la matriz
+func (m *Mine) AddRelation(obj GameObject) {
+	m.relations = append(m.relations, obj)
+}
+
+// Retorna las relaciones que tiene un objeto con otro de la matriz
+func (m *Mine) GetRelations() []GameObject {
+	return m.relations
+}
+
 // Funciones de la interfaz iFactory
 func (m *Mine) DoAction() {
 
@@ -79,5 +94,5 @@ func (m *Mine) GetType() int64 {
 }
 
 func (m *Mine) SetType(ComponentType int64) {
-
+	m.componentType = ComponentType
 }

@@ -33,13 +33,21 @@ func AssignPlayer(client *websocket.Conn) {
 
 // Creamos un nuevo jugador
 func CreatePlayer(pack *NetworkPackage) {
-	fmt.Println("Servidor: Creando nuevo perfil de jugador...")
-	fmt.Printf("Mensaje: %v\n", pack.Msg.Name)
+	fmt.Println("\n\nServidor: Creando nuevo perfil de jugador...")
 
-	fmt.Printf("Nombre recibido: %v\n", pack.Msg.Name)
+	fmt.Printf("Nombre recibido: %v\n", pack.Msg.Text)
 	Clients[pack.To].Name = pack.Msg.Name
 
 	fmt.Printf("Matriz recibida: \n %v\n", pack.Msg.Matrix)
+	Clients[pack.To].GenerateMatrix(pack.Msg.Matrix)
+
+	fmt.Println("Matriz generada:")
+	Clients[pack.To].PrintMatrix()
+
+	fmt.Println("Generando grafos:")
+	Clients[pack.To].GenerateGraph()
+
+	fmt.Printf("\n\n")
 
 	StartBroadcast <- 1
 }
