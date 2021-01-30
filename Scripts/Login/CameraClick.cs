@@ -9,6 +9,11 @@ public class CameraClick : MonoBehaviour
     private void Start()
     {
         generator = GameObject.Find("Generator").GetComponent<ComponentGenerator>();
+
+        // Generamos un mundo aleatorio
+        GameObject test = new GameObject();
+
+        // Generamos un mercado aleatorio
     }
 
     void Update()

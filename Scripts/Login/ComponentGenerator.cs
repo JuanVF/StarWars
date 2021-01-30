@@ -24,6 +24,8 @@ public class ComponentGenerator : MonoBehaviour
     public static float[,] PlayerMatrix = new float[15, 15];
     public static bool[,] PlayerSet = new bool[15, 15];
 
+    public static GameObject[,] matrix = new GameObject[15, 15];
+
     void Start()
     {
         ComponentSize = new int[,] { { 1, 2 }, { 1, 1 }, { 1, 2 }, { 1, 2 }, { 2, 2 }, { 1, 2 } };
@@ -65,6 +67,8 @@ public class ComponentGenerator : MonoBehaviour
                 int tmpRow = row;
 
                 point.setPoint(tmpCol, tmpRow);
+
+                matrix[col, row] = tile;
             }
 
         Destroy(reference);
@@ -92,5 +96,7 @@ public class ComponentGenerator : MonoBehaviour
                 selectedComponent = tmpIndex;
             });
         }
+
+        Destroy(reference);
     }
 }
