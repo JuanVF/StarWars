@@ -30,7 +30,7 @@ func (a *Armory) Run() {
 }
 
 func (a *Armory) OnHit(player *Player) {
-
+	a.owner.RemoveObject(a)
 }
 
 func (a *Armory) GetSize() utils.Point {
@@ -47,6 +47,24 @@ func (a *Armory) GetRelations() []GameObject {
 	return a.relations
 }
 
+// Remueve una relacion
+func (a *Armory) RemoveRelation(obj GameObject) {
+	index := -1
+
+	for i := 0; i < len(a.relations); i++ {
+		if a.relations[i] == obj {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		return
+	}
+
+	a.relations = append(a.relations[:index], a.relations[:index+1]...)
+}
+
 // Funciones de la interfaz iFactory
 func (a *Armory) DoAction() {
 	switch a.componentType {
@@ -56,6 +74,10 @@ func (a *Armory) DoAction() {
 	case utils.MULTISHOT:
 	default:
 	}
+}
+
+func (a *Armory) Stop() {
+
 }
 
 // Funciones de la interfaz iComponent

@@ -26,6 +26,7 @@ func StartServer() error {
 
 	// Abrimos el broadcast
 	go BroadcastHandler()
+	go ChatListener()
 
 	if err := http.ListenAndServe(SERVER_PORT, nil); err != nil {
 		return fmt.Errorf("Server error: %s", err)
@@ -99,7 +100,7 @@ func BroadcastHandler() {
 
 		pack := CreatePackage(msg, msg.To)
 
-		if !pack.Response || pack.Msg == nil {
+		if pack == nil || !pack.Response || pack.Msg == nil {
 			continue
 		}
 

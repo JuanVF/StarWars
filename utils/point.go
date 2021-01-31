@@ -16,3 +16,22 @@ func (p Point) GetDistance(p2 Point) float64 {
 
 	return math.Sqrt(disX + disY)
 }
+
+// Parsea una lista de flotantes con formato {x, y} a una lista de puntos
+func (p Point) Parse(points []float64) []Point {
+	// El formato no es correcto
+	if len(points)%2 != 0 {
+		return nil
+	}
+
+	rst := []Point{}
+
+	for i := 0; i < len(points); i += 2 {
+		rst = append(rst, Point{
+			X: points[i],
+			Y: points[i+1],
+		})
+	}
+
+	return rst
+}

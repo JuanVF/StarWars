@@ -38,15 +38,12 @@ func (m *Mine) OnStart() {
 
 	m.time = 60000
 	m.amount = 50
+
+	go m.DoAction()
 }
 
 // Cada x segundos produce una n cantidad de hierro
 func (m *Mine) Run() {
-	if m.currentTime+m.time-utils.GetCurrentTime() < 0 {
-		m.owner.AddSteel(m.amount)
-
-		m.currentTime = utils.GetCurrentTime()
-	}
 }
 
 func (m *Mine) OnHit(player *Player) {
@@ -67,8 +64,36 @@ func (m *Mine) GetRelations() []GameObject {
 	return m.relations
 }
 
+// Remueve una relacion
+func (m *Mine) RemoveRelation(obj GameObject) {
+	index := -1
+
+	for i := 0; i < len(m.relations); i++ {
+		if m.relations[i] == obj {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		return
+	}
+
+	m.relations = append(m.relations[:index], m.relations[:index+1]...)
+}
+
 // Funciones de la interfaz iFactory
 func (m *Mine) DoAction() {
+	for {
+		if m.currentTime+m.time-utils.GetCurrentTime() < 0 {
+			m.owner.AddSteel(m.amount)
+
+			m.currentTime = utils.GetCurrentTime()
+		}
+	}
+}
+
+func (m *Mine) Stop() {
 
 }
 

@@ -38,7 +38,7 @@ func (m *Market) Run() {
 }
 
 func (m *Market) OnHit(player *Player) {
-
+	m.owner.RemoveObject(m)
 }
 
 func (m *Market) GetSize() utils.Point {
@@ -55,8 +55,30 @@ func (m *Market) GetRelations() []GameObject {
 	return m.relations
 }
 
+// Remueve una relacion
+func (m *Market) RemoveRelation(obj GameObject) {
+	index := -1
+
+	for i := 0; i < len(m.relations); i++ {
+		if m.relations[i] == obj {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		return
+	}
+
+	m.relations = append(m.relations[:index], m.relations[:index+1]...)
+}
+
 // Funciones de la interfaz iFactory
 func (m *Market) DoAction() {
+
+}
+
+func (m *Market) Stop() {
 
 }
 

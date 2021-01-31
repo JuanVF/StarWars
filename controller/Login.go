@@ -36,7 +36,7 @@ func CreatePlayer(pack *NetworkPackage) {
 	fmt.Println("\n\nServidor: Creando nuevo perfil de jugador...")
 
 	fmt.Printf("Nombre recibido: %v\n", pack.Msg.Text)
-	Clients[pack.To].Name = pack.Msg.Name
+	Clients[pack.To].Name = pack.Msg.Text
 
 	fmt.Printf("Matriz recibida: \n %v\n", pack.Msg.Matrix)
 	Clients[pack.To].GenerateMatrix(pack.Msg.Matrix)
@@ -48,6 +48,8 @@ func CreatePlayer(pack *NetworkPackage) {
 	Clients[pack.To].GenerateGraph()
 
 	Clients[pack.To].GetGraphPoints()
+
+	Clients[pack.To].Money = int64(pack.Msg.Numbers[0])
 
 	fmt.Printf("\n\n")
 
@@ -70,6 +72,9 @@ func StartListener() {
 			}
 
 			SendToAll(pack.Msg)
+
+			// Iniciamos todos los listeners de los players
+			InitPlayersListener()
 
 			return
 		}

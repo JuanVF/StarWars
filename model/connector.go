@@ -46,6 +46,24 @@ func (c *Connector) GetRelations() []GameObject {
 	return c.relations
 }
 
+// Remueve una relacion
+func (c *Connector) RemoveRelation(obj GameObject) {
+	index := -1
+
+	for i := 0; i < len(c.relations); i++ {
+		if c.relations[i] == obj {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		return
+	}
+
+	c.relations = append(c.relations[:index], c.relations[:index+1]...)
+}
+
 // Funciones de la interfaz iComponent
 func (c *Connector) SetPrice(int64) {
 

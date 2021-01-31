@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/JuanVF/StarWars/utils"
 )
@@ -10,23 +11,78 @@ type Player struct {
 	Name           string
 	Money          int64
 	Steel          int64
-	HasShield      bool
-	isGraphVisible bool
+	HasShield      int64
+	IsGraphVisible bool
 	GunsList       map[Guns]int
 	Matrix         [15][15]GameObject
 	Graph          map[utils.Point]map[utils.Point]float64
+	FactoryChan    chan string
 }
 
 func (p *Player) AddObject(object GameObject) {
 
 }
 
+// Removemos un componente de la matriz y hacemos el grafo visible
 func (p *Player) RemoveObject(object GameObject) {
+	cantWorlds := 0
 
+	if object.GetType() == utils.CONNECTOR {
+		for _, rel := range object.GetRelations() {
+			fmt.Println("Rel tipo: " + utils.ComponentIDToString(int(rel.GetType())))
+			if rel.GetType() != utils.WORLD {
+				p.IsGraphVisible = true
+			}
+		}
+	}
+
+	for col := 0; col < 15; col++ {
+		for row := 0; row < 15; row++ {
+			if p.Matrix[col][row] == nil {
+				continue
+			}
+
+			if p.Matrix[col][row] == object {
+				p.Matrix[col][row] = nil
+
+				continue
+			}
+
+			// Si es un mundo aumento la cantidad de mundos
+			if p.Matrix[col][row].GetType() == utils.WORLD {
+				cantWorlds++
+			}
+		}
+	}
+
+	if !p.IsGraphVisible {
+		p.IsGraphVisible = cantWorlds == 0
+	}
+
+	if p.IsGraphVisible {
+		p.RemoveRelations(object)
+
+		if object.GetType() == utils.WORLD {
+			p.Money += 10000
+		}
+
+		p.FactoryChan <- "SERVER_GRAFO_VISIBLE"
+	}
 }
 
+// Remueve las relaciones de un objeto
+func (p *Player) RemoveRelations(object GameObject) {
+	for i := 0; i < len(object.GetRelations()); i++ {
+		object.GetRelations()[i].RemoveRelation(object)
+	}
+}
+
+// Le agregamos acero a un jugador
 func (p *Player) AddSteel(amount int64) {
 	p.Steel += amount
+
+	p.FactoryChan <- "Mina: Has recibido: " + strconv.Itoa(int(amount)) + " de acero..."
+	p.FactoryChan <- "SERVER_STEEL"
 }
 
 // Generamos el grafo inicial de juego
@@ -186,6 +242,10 @@ func (p *Player) GetGraphPoints() []float64 {
 
 			for i := 0; i < len(relations); i++ {
 				tmpPos := []float64{}
+
+				if relations[i] == nil {
+					continue
+				}
 
 				// Obtenemos la posicion de un objeto en la matriz
 				if cache[relations[i]] != nil {

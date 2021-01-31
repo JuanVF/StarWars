@@ -1,18 +1,46 @@
 package model
 
+import (
+	"strconv"
+
+	"github.com/JuanVF/StarWars/utils"
+)
+
 type Missile struct {
 	price int64
 }
 
 // Funciones de la iGuns
-func (m *Missile) Shot(player *Player, x int64, y int64) {
+func (m *Missile) Shot(attacker, player *Player, pos []float64) string {
+	attackPoints := (utils.Point{}).Parse(pos)
+	log := ""
 
+	// Atacamos los puntos
+	for _, point := range attackPoints {
+		col := int(point.X)
+		row := int(point.Y)
+		obj := player.Matrix[col][row]
+
+		// El ataque fallo
+		if obj == nil {
+			log += "El ataque en: {" + strconv.Itoa(col) + ", " + strconv.Itoa(row) + " } fallo...\n"
+			continue
+		}
+
+		// El ataque no fallo
+		log += "El ataque en: {" + strconv.Itoa(col) + ", " + strconv.Itoa(row) + " } acerto...\n"
+		log += "Componente: " + utils.ComponentIDToString(int(obj.GetType()))
+
+		obj.OnHit(attacker)
+	}
+
+	return log
 }
 
 func (m *Missile) GetPrice() int64 {
-	return m.price
+	return 500
 }
 
 func (m *Missile) SetPrice(price int64) {
-
+	m.price = 500
 }

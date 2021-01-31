@@ -46,6 +46,24 @@ func (w *World) GetRelations() []GameObject {
 	return w.relations
 }
 
+// Remueve una relacion
+func (w *World) RemoveRelation(obj GameObject) {
+	index := -1
+
+	for i := 0; i < len(w.relations); i++ {
+		if w.relations[i] == obj {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		return
+	}
+
+	w.relations = append(w.relations[:index], w.relations[:index+1]...)
+}
+
 // Funciones de la interfaz iComponent
 func (w *World) SetPrice(int64) {
 

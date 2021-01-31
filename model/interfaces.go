@@ -11,6 +11,7 @@ type GameObject interface {
 	GetType() int64
 	AddRelation(obj GameObject)
 	GetRelations() []GameObject
+	RemoveRelation(obj GameObject)
 }
 
 // Estos son los componentes de juego
@@ -26,11 +27,12 @@ type Component interface {
 // Estos son los componentes que pueden producir cosas
 type Factory interface {
 	DoAction()
+	Stop()
 }
 
 // Esto representa las armas en el juego
 type Guns interface {
-	Shot(player *Player, x int64, y int64)
+	Shot(attacker, player *Player, pos []float64) string
 	GetPrice() int64
 	SetPrice(price int64)
 }

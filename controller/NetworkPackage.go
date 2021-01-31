@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"log"
+	"strconv"
 
 	"github.com/JuanVF/StarWars/utils"
 	"github.com/gorilla/websocket"
@@ -67,6 +68,51 @@ func CreatePackage(msg *NetworkPackage, client *websocket.Conn) *NetworkPackage 
 
 		pack.Response = false
 		pack.To = nil
+	case utils.CHAT:
+		ChatBroadcast <- msg.Msg.Name + " : " + msg.Msg.Text
+		pack.Response = false
+		pack.To = nil
+	case utils.PLAYER_INIT:
+		msg := Message{
+			IdMessage: "PLAYER_INIT",
+			Numbers:   []float64{float64(Clients[client].Money), float64(Clients[client].Steel)},
+		}
+
+		pack.To = client
+		pack.Response = true
+		pack.Msg = &msg
+	case utils.ENEMY_INIT:
+		// Si el enemigo existe y la matriz es visible la retornamos
+		enemy := GetEnemieName(client)
+
+		fmt.Println("Jugador: " + Clients[client].Name + ", enemigo: " + enemy)
+		fmt.Println("JugadorTurno: " + strconv.Itoa(TurnListP[client]) + ", enemigo: " + strconv.Itoa(TurnListP[GetSocket(enemy)]))
+
+		msg := Message{
+			IdMessage: "ENEMY_INIT",
+			Number:    float64(TurnListP[GetSocket(enemy)]),
+			Text:      enemy,
+		}
+
+		if GetPlayer(enemy) != nil && GetPlayer(enemy).IsGraphVisible {
+			msg.Matrix = GetPlayer(enemy).GetMatrix()
+		}
+
+		pack.To = client
+		pack.Response = true
+		pack.Msg = &msg
+	case utils.ATTACK:
+		pack.To = client
+		pack.Response = false
+		pack.Msg = msg.Msg
+		DoAttack(&pack)
+
+	case utils.BUY_ARMORY:
+		pack.To = client
+		pack.Response = false
+		pack.Msg = msg.Msg
+		BuyArmory(&pack)
+		return nil
 	default:
 		return nil
 	}
@@ -107,6 +153,29 @@ func CreatePackageMsg(msg *Message, client *websocket.Conn) *NetworkPackage {
 		pack.To = client
 		pack.Response = true
 		pack.Msg = msg
+	case "CHAT":
+		pack.ID = utils.CHAT
+		pack.Msg = msg
+	case "PLAYER_INIT":
+		pack.ID = utils.PLAYER_INIT
+		pack.To = client
+		pack.Response = true
+		pack.Msg = msg
+	case "ENEMY_INIT":
+		pack.ID = utils.ENEMY_INIT
+		pack.To = client
+		pack.Response = true
+		pack.Msg = msg
+	case "ATTACK":
+		pack.ID = utils.ATTACK
+		pack.To = client
+		pack.Response = true
+		pack.Msg = msg
+	case "ARMORY":
+		pack.ID = utils.BUY_ARMORY
+		pack.To = client
+		pack.Response = true
+		pack.Msg = msg
 	default:
 		return nil
 	}
@@ -126,6 +195,29 @@ func SendTo(pack *NetworkPackage) {
 	}
 
 	fmt.Printf("Sending to: %v, message: %v\n", pack.Msg.Name, pack.Msg.IdMessage)
+}
+
+// Le envia un mensaje a un jugador en especifico por el chat
+func SendToPlayerChat(msg string, to *websocket.Conn) {
+	pack := NetworkPackage{
+		To: to,
+		Msg: &Message{
+			IdMessage: "CHAT",
+			Text:      msg,
+		},
+	}
+
+	SendTo(&pack)
+}
+
+// Envia un mensaje a todos los jugadores
+func SendToChat(msg string) {
+	pack := &Message{
+		IdMessage: "CHAT",
+		Text:      msg,
+	}
+
+	SendToAll(pack)
 }
 
 // Enviamos paquetes a todo el mundo
