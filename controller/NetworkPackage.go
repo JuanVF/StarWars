@@ -101,6 +101,44 @@ func CreatePackage(msg *NetworkPackage, client *websocket.Conn) *NetworkPackage 
 		pack.To = client
 		pack.Response = true
 		pack.Msg = &msg
+	case utils.NEXT_ENEMY:
+		currentT := int(msg.Msg.Number)
+		currentT++
+
+		for {
+			if currentT > MAX_TURN {
+				currentT = 0
+			}
+
+			isPlayer := Clients[TurnList[currentT]].Name == Clients[client].Name
+
+			fmt.Printf("%s == %s\n", Clients[TurnList[currentT]].Name, Clients[client].Name)
+			if isPlayer {
+				currentT++
+
+				continue
+			}
+
+			break
+		}
+
+		enemyName := Clients[TurnList[currentT]].Name
+		fmt.Printf("Enviando jugador: %v", enemyName)
+
+		msg := Message{
+			IdMessage: "NEXT_ENEMY",
+			Number:    float64(currentT),
+			Text:      enemyName,
+		}
+
+		if GetPlayer(enemyName) != nil && GetPlayer(enemyName).IsGraphVisible {
+			msg.Matrix = GetPlayer(enemyName).GetMatrix()
+			msg.Numbers = GetPlayer(enemyName).GetGraphPoints()
+		}
+
+		pack.To = client
+		pack.Response = true
+		pack.Msg = &msg
 	case utils.ATTACK:
 		pack.To = client
 		pack.Response = false
@@ -173,6 +211,16 @@ func CreatePackageMsg(msg *Message, client *websocket.Conn) *NetworkPackage {
 		pack.Msg = msg
 	case "ARMORY":
 		pack.ID = utils.BUY_ARMORY
+		pack.To = client
+		pack.Response = true
+		pack.Msg = msg
+	case "SKIP":
+		if isPlayerTurn(client) {
+			TurnBroadcast <- true
+		}
+		return nil
+	case "NEXT_ENEMY":
+		pack.ID = utils.NEXT_ENEMY
 		pack.To = client
 		pack.Response = true
 		pack.Msg = msg

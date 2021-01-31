@@ -34,6 +34,8 @@ const (
 	PLAYER_INIT   = iota
 	ATTACK        = iota
 	BUY_ARMORY    = iota
+	SKIP          = iota
+	NEXT_ENEMY    = iota
 )
 
 func ComponentIDToString(cType int) string {

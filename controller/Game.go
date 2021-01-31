@@ -58,9 +58,9 @@ func AssignTurns() {
 		turn++
 	}
 
-	MAX_TURN = turn
+	MAX_TURN = turn - 1
 
-	fmt.Printf("Maximo de turnos: %v\n", MAX_TURN)
+	fmt.Printf("Maximo de turnos: %v\n", MAX_TURN-1)
 
 	// Le enviamos el turno
 	pack := NetworkPackage{
@@ -219,28 +219,34 @@ func DoAttack(pack *NetworkPackage) {
 		return
 	}
 
+	//gunType := ""
+
 	// Determinamos el tipo de arma
 	switch pack.Msg.Number {
 	case utils.MISSILE:
 		attackType = &model.Missile{}
+		//gunType = "missile"
 	case utils.MULTISHOT:
 		attackType = &model.MultiShot{}
+		//gunType = "multishot"
 	case utils.BOMB:
 		attackType = &model.Bomb{}
+		//gunType = "bomb"
 	case utils.COMBOSHOT:
 		attackType = &model.ComboShot{}
+		//gunType = "comboshot"
 	default:
 		return
 	}
 
 	// Verificamos que el jugador posea el arma con la que va a atacar
-	gunList := Clients[pack.To].GunsList
+	/*gunList := Clients[pack.To].GunsList
 
-	if gunList[attackType] == 0 {
+	if gunList[gunType] == 0 {
 		SendToPlayerChat("Server: No tienes ese tipo de arma...", pack.To)
 
 		return
-	}
+	}*/
 
 	if attackTo.HasShield != 0 {
 		SendToPlayerChat("Server: El jugador tiene un escudo activo...", pack.To)
@@ -283,9 +289,9 @@ func BuyArmory(pack *NetworkPackage) {
 
 	// Evitamos un hashmap nulo
 	if Clients[pack.To].GunsList == nil {
-		Clients[pack.To].GunsList = make(map[model.Guns]int)
+		Clients[pack.To].GunsList = make(map[string]int)
 	}
 
-	Clients[pack.To].GunsList[gun]++
+	Clients[pack.To].GunsList[arType]++
 	SendToPlayerChat("Has comprado el arma!", pack.To)
 }

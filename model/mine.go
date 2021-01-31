@@ -36,8 +36,10 @@ func (m *Mine) OnStart() {
 
 	m.currentTime = utils.GetCurrentTime()
 
-	m.time = 60000
-	m.amount = 50
+	//m.time = 60000
+	//m.amount = 50
+	m.time = 2000
+	m.amount = 500
 
 	go m.DoAction()
 }

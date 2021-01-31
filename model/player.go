@@ -13,7 +13,7 @@ type Player struct {
 	Steel          int64
 	HasShield      int64
 	IsGraphVisible bool
-	GunsList       map[Guns]int
+	GunsList       map[string]int
 	Matrix         [15][15]GameObject
 	Graph          map[utils.Point]map[utils.Point]float64
 	FactoryChan    chan string
