@@ -63,7 +63,7 @@ public class PlayerGrid : MonoBehaviour
         {
             for (int row = 0; row < rows; row++)
             {
-                if (Network.matrix[col, row] == -1) continue;
+                if (Network.matrix[col, row] == -1 || Network.matrix[col, row] >= ComponentImages.Length) continue;
 
                 AddComponent(matrix[col, row], (int) Network.matrix[col, row]);
             }

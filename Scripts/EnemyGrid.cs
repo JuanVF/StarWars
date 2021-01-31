@@ -63,7 +63,7 @@ public class EnemyGrid : MonoBehaviour
         {
             for (int row = 0; row < rows; row++)
             {
-                if (Network.enemyMatrix[col, row] == -1) continue;
+                if (Network.enemyMatrix[col, row] == -1 || Network.enemyMatrix[col, row] >= ComponentImages.Length) continue;
 
                 AddComponent(matrix[col, row], (int)Network.enemyMatrix[col, row]);
             }
