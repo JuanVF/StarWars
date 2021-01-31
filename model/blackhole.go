@@ -1,10 +1,12 @@
 package model
 
 import (
+	"strconv"
+
 	"github.com/JuanVF/StarWars/utils"
 )
 
-type Armory struct {
+type BlackHole struct {
 	owner         *Player
 	price         int64
 	gunType       int64
@@ -14,7 +16,7 @@ type Armory struct {
 }
 
 // Funciones de la interfaz iGameObject
-func (a *Armory) OnStart() {
+func (a *BlackHole) OnStart() {
 	a.SetPrice(1000)
 
 	a.Size = utils.Point{
@@ -25,11 +27,11 @@ func (a *Armory) OnStart() {
 	a.SetType(utils.ARMORY)
 }
 
-func (a *Armory) Run() {
+func (a *BlackHole) Run() {
 
 }
 
-func (a *Armory) OnHit(player *Player) {
+func (a *BlackHole) OnHit(player *Player) {
 	ocol := -1
 	orow := -1
 
@@ -42,37 +44,32 @@ func (a *Armory) OnHit(player *Player) {
 		}
 	}
 
-	// Si la distancia es menor que dos lo explotamos
 	if ocol != -1 && orow != -1 {
-		for col := 0; col < len(a.owner.Matrix); col++ {
-			for row := 0; row < len(a.owner.Matrix[col]); row++ {
-				currentPoint := utils.Point{X: float64(col), Y: float64(row)}
-				if currentPoint.GetDistance(utils.Point{X: float64(ocol), Y: float64(orow)}) <= 2 {
-					a.owner.Matrix[col][row].OnHit(player)
-				}
-			}
+		player.FactoryChan <- "Server: has golpeado un agujero negro"
+		if player.Matrix[ocol][orow] != nil {
+			player.FactoryChan <- "Devolviendo ataque en {" + strconv.Itoa(ocol) + "}, {" + strconv.Itoa(orow) + "}"
+
+			player.Matrix[ocol][orow].OnHit(a.owner)
 		}
 	}
-
-	a.owner.RemoveObject(a)
 }
 
-func (a *Armory) GetSize() utils.Point {
+func (a *BlackHole) GetSize() utils.Point {
 	return a.Size
 }
 
 // Agrega una relacion con otro objeto de la matriz
-func (a *Armory) AddRelation(obj GameObject) {
+func (a *BlackHole) AddRelation(obj GameObject) {
 	a.relations = append(a.relations, obj)
 }
 
 // Retorna las relaciones que tiene un objeto con otro de la matriz
-func (a *Armory) GetRelations() []GameObject {
+func (a *BlackHole) GetRelations() []GameObject {
 	return a.relations
 }
 
 // Remueve una relacion
-func (a *Armory) RemoveRelation(obj GameObject) {
+func (a *BlackHole) RemoveRelation(obj GameObject) {
 	index := -1
 
 	for i := 0; i < len(a.relations); i++ {
@@ -90,7 +87,7 @@ func (a *Armory) RemoveRelation(obj GameObject) {
 }
 
 // Funciones de la interfaz iFactory
-func (a *Armory) DoAction() {
+func (a *BlackHole) DoAction() {
 	switch a.componentType {
 	case utils.BOMB:
 	case utils.MISSILE:
@@ -100,31 +97,31 @@ func (a *Armory) DoAction() {
 	}
 }
 
-func (a *Armory) Stop() {
+func (a *BlackHole) Stop() {
 
 }
 
 // Funciones de la interfaz iComponent
-func (a *Armory) SetPrice(typeC int64) {
+func (a *BlackHole) SetPrice(typeC int64) {
 	a.price = typeC
 }
 
-func (a *Armory) GetPrice() int64 {
+func (a *BlackHole) GetPrice() int64 {
 	return a.price
 }
 
-func (a *Armory) SetPlayer(owner *Player) {
+func (a *BlackHole) SetPlayer(owner *Player) {
 
 }
 
-func (a *Armory) GetPlayer() *Player {
+func (a *BlackHole) GetPlayer() *Player {
 	return a.owner
 }
 
-func (a *Armory) GetType() int64 {
+func (a *BlackHole) GetType() int64 {
 	return a.componentType
 }
 
-func (a *Armory) SetType(ComponentType int64) {
+func (a *BlackHole) SetType(ComponentType int64) {
 	a.componentType = ComponentType
 }

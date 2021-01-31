@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"math/rand"
 	"strconv"
 
 	"github.com/JuanVF/StarWars/utils"
@@ -66,6 +67,10 @@ func (p *Player) RemoveObject(object GameObject) {
 			p.Money += 10000
 		}
 
+		if p.FactoryChan == nil {
+			p.FactoryChan = make(chan string)
+		}
+
 		p.FactoryChan <- "SERVER_GRAFO_VISIBLE"
 	}
 }
@@ -80,6 +85,10 @@ func (p *Player) RemoveRelations(object GameObject) {
 // Le agregamos acero a un jugador
 func (p *Player) AddSteel(amount int64) {
 	p.Steel += amount
+
+	if p.FactoryChan == nil {
+		p.FactoryChan = make(chan string)
+	}
 
 	p.FactoryChan <- "Mina: Has recibido: " + strconv.Itoa(int(amount)) + " de acero..."
 	p.FactoryChan <- "SERVER_STEEL"
@@ -225,7 +234,7 @@ func (p *Player) GetGraphPoints() []float64 {
 			pos := []float64{float64(col), float64(row)}
 
 			// Nos saltamos los espacios vacios
-			if object == nil {
+			if object == nil || object.GetType() == utils.BLACK_HOLE {
 				continue
 			}
 
@@ -288,10 +297,18 @@ func (p *Player) GetByPosition(obj GameObject) []float64 {
 
 // Aqui generamos la matriz
 func (p *Player) GenerateMatrix(Matrix [][]float64) {
+	amount := 0
+
 	for col := 0; col < len(Matrix); col++ {
 		for row := 0; row < len(Matrix[col]); row++ {
 			if p.Matrix[col][row] != nil {
 				continue
+			}
+
+			if Matrix[col][row] == -1 && rand.Intn(100) <= 20 && amount < 2 {
+				Matrix[col][row] = float64(utils.BLACK_HOLE)
+				amount++
+				fmt.Printf("Agujero negro generado en {%d, %d}\n", col, row)
 			}
 
 			var object GameObject = nil
@@ -340,8 +357,8 @@ func (p *Player) GenerateMatrix(Matrix [][]float64) {
 
 // Se asignan los campos extras con la misma referencia de memoria
 func (p *Player) AssignMatrixBySize(col, row int, size utils.Point) {
-	for i := col; i < col+int(size.X); i++ {
-		for j := row; j < row+int(size.Y); j++ {
+	for i := col; i < col+int(size.Width); i++ {
+		for j := row; j < row+int(size.Height); j++ {
 			p.Matrix[i][j] = p.Matrix[col][row]
 		}
 	}
