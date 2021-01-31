@@ -74,7 +74,7 @@ public class EnemyGrid : MonoBehaviour
     private void GenerateGraphPoints()
     {
         // Validamos que lleguen puntos correctos
-        if (Network.enemyGraph.Length % 2 != 0)
+        if (Network.enemyGraph.Length % 4 != 0)
         {
             Debug.Log("Data de grafos incorrecta...");
 

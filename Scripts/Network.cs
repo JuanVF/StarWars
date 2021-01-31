@@ -167,6 +167,7 @@ public class Network
                 SendMessage(message);
 
                 break;
+            case "NEXT_ENEMY":
             case "ENEMY_INIT":
                 enemyTurn = (int) messageAvailable.number;
                 enemyName = messageAvailable.text;
@@ -181,7 +182,8 @@ public class Network
                     idMessage = "REQUEST_TURN"
                 };
 
-                SendMessage(message);
+                if (messageAvailable.idMessage == "ENEMY_INIT")
+                    SendMessage(message);
 
                 break;
             case "GRAPH_VISIBLE":

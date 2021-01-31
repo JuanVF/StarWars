@@ -25,6 +25,7 @@ public class GameController : MonoBehaviour
     private GameObject attacksContainer;
 
     private Button chatButton;
+    private Button nextButton;
     private Text chatText;
 
     public Sprite[] attacks;
@@ -33,13 +34,16 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        playerTurn = GameObject.Find("PlayerTurn").GetComponent<Text>();
-        currentTurn = GameObject.Find("CurrentTurn").GetComponent<Text>();
-        chatButton = GameObject.Find("ChatButton").GetComponent<Button>();
-        chatText = GameObject.Find("ChatText").GetComponent<Text>();
         currentSteel = GameObject.Find("PlayerSteel").GetComponent<Text>();
         currentMoney = GameObject.Find("PlayerMoney").GetComponent<Text>();
+        currentTurn = GameObject.Find("CurrentTurn").GetComponent<Text>();
+        playerTurn = GameObject.Find("PlayerTurn").GetComponent<Text>();
         enemyName = GameObject.Find("EnemyName").GetComponent<Text>();
+        chatText = GameObject.Find("ChatText").GetComponent<Text>();
+
+        chatButton = GameObject.Find("ChatButton").GetComponent<Button>();
+        nextButton = GameObject.Find("NextButton").GetComponent<Button>();
+
         attacksContainer = GameObject.Find("AttackContainer");
 
         chatContainer = GameObject.Find("ChatContainer");
@@ -48,6 +52,16 @@ public class GameController : MonoBehaviour
 
         chatButton.onClick.AddListener(delegate {
             OnBtnChatClicked();
+        });
+
+        nextButton.onClick.AddListener(delegate {
+            Message message = new Message
+            {
+                idMessage = "NEXT_ENEMY",
+                number = Network.enemyTurn
+            };
+
+            Network.getInstance().SendMessage(message);
         });
 
         GenerateAttacks();
@@ -157,6 +171,15 @@ public class GameController : MonoBehaviour
                 message = new Message
                 {
                     idMessage = "PLAYER_INFO",
+                    texts = msg
+                };
+
+                Network.getInstance().SendMessage(message);
+                break;
+            case "SKIP":
+                message = new Message
+                {
+                    idMessage = "SKIP",
                     texts = msg
                 };
 
