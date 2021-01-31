@@ -102,7 +102,8 @@ public class Network
                 {
                     idMessage = "REQUESTDATA",
                     text = name,
-                    matrix = matrix
+                    matrix = matrix,
+                    numbers = new float[] {money}
                 };
 
                 SendMessage(message);
@@ -183,6 +184,16 @@ public class Network
                 SendMessage(message);
 
                 break;
+            case "GRAPH_VISIBLE":
+                if (enemyName != messageAvailable.text) return;
+
+                Debug.Log("Un enemigo tiene el grafo visible");
+
+                enemyName = messageAvailable.text;
+                enemyMatrix = messageAvailable.matrix;
+                enemyGraph = messageAvailable.numbers;
+
+                break;
             case "ASSIGN_TURN":
                 Debug.Log("Recibiendo turno: " + messageAvailable.number);
 
@@ -206,6 +217,13 @@ public class Network
                 Debug.Log("Server: Mensaje = " + messageAvailable.text);
 
                 chatMessage = messageAvailable.text;
+
+                break;
+            case "USER_INFO":
+                Debug.Log("Datos del usuario actualizados...");
+
+                steel = messageAvailable.numbers[0];
+                money = messageAvailable.numbers[1];
 
                 break;
             default:

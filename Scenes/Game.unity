@@ -1147,8 +1147,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83463c34dec7cac4f8b01f25d7cf399b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ComponentImages: []
-  ComponentNames: []
+  ComponentImages:
+  - {fileID: 21300000, guid: 64dd7f748657673478e398172996e8eb, type: 3}
+  - {fileID: 21300000, guid: acc705b8bfc26444888b695de57fe08f, type: 3}
+  - {fileID: 21300000, guid: 9dfa3625db3b21240a7683df8b359231, type: 3}
+  - {fileID: 21300000, guid: 5a068c90eeabddf4aa0e393d89dd57c0, type: 3}
+  - {fileID: 21300000, guid: f2a95b213f271da49b6aa4500004e230, type: 3}
+  - {fileID: 21300000, guid: e56d116769357ff4690f99a233c20cda, type: 3}
+  ComponentNames:
+  - Armeria
+  - Conector
+  - Mercado
+  - Mina
+  - Mundo
+  - Templo
   ComponentPrice: 
   cols: 15
   rows: 15
@@ -2856,6 +2868,11 @@ MonoBehaviour:
   - Multishot
   - Bomba
   - ComboShot
+  attacksPrice:
+  - 500
+  - 1000
+  - 2000
+  - 5000
 --- !u!1 &1595021374
 GameObject:
   m_ObjectHideFlags: 0
@@ -3186,6 +3203,7 @@ GameObject:
   - component: {fileID: 2060563268}
   - component: {fileID: 2060563267}
   - component: {fileID: 2060563266}
+  - component: {fileID: 2060563269}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3259,6 +3277,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2060563269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060563265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af4bea1df07852648908417f69d2d9a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2097071556
 GameObject:
   m_ObjectHideFlags: 0

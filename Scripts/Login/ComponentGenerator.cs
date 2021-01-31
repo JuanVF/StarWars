@@ -86,9 +86,11 @@ public class ComponentGenerator : MonoBehaviour
             Text name = component.transform.Find("ComponentName").GetComponent<Text>();
             Image image = component.transform.Find("ComponentImage").GetComponent<Image>();
             Button button = component.transform.Find("ComponentButton").GetComponent<Button>();
+            Text price = component.transform.Find("ComponentPrice").GetComponent<Text>();
 
             name.text = ComponentNames[i];
             image.sprite = ComponentImages[i];
+            price.text = "Precio $" + ComponentPrice[i];
 
             int tmpIndex = i;
 

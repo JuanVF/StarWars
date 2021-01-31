@@ -38,14 +38,17 @@ public class CameraClick : MonoBehaviour
     private void GenerateInitialComponents()
     {
         // Generamos un mundo aleatorio
-        ComponentGenerator.selectedComponent = 4;
-        GameObject t1 = ComponentGenerator.matrix[Random.Range(0, 12), Random.Range(0, 12)];
-        ClickedTile(t1);
+        int col = Random.Range(0, 12);
+        int row = Random.Range(0, 12);
+
+        GameObject t1 = ComponentGenerator.matrix[col, row];
+        AddTile(t1, col, row, 4); 
 
         // Generamos un mercado aleatorio
-        ComponentGenerator.selectedComponent = 2;
-        GameObject t2 = ComponentGenerator.matrix[Random.Range(0, 12), Random.Range(0, 12)];
-        ClickedTile(t2);
+        col = Random.Range(0, 12);
+        row = Random.Range(0, 12);
+        GameObject t2 = ComponentGenerator.matrix[col, row];
+        AddTile(t2, col, row, 2);
 
         alreadyGenerated = true;
     }
@@ -88,6 +91,20 @@ public class CameraClick : MonoBehaviour
             return;
         }
 
+        int presio = generator.ComponentPrice[index];
+        if (Network.money - presio < 0)
+        {
+            return;
+        }
+        Network.money -= presio;
+
+        AddTile(tile, col, row, index);
+    }
+    
+    private void AddTile(GameObject tile, int col, int row, int index)
+    {
+        int[,] sizes = generator.ComponentSize;
+
         // Agregamos la imagen y la reescalamos
         Debug.Log("Agregando imagen...");
 
@@ -95,7 +112,7 @@ public class CameraClick : MonoBehaviour
         ComponentGenerator.PlayerSet[col, row] = true;
         ComponentGenerator.PlayerSet[col + sizes[index, 0] - 1, row + sizes[index, 1] - 1] = true;
 
-        GameObject img = (GameObject) Instantiate(Resources.Load("tileImg"), tile.transform);
+        GameObject img = (GameObject)Instantiate(Resources.Load("tileImg"), tile.transform);
 
         float width = sizes[index, 1];
         float height = sizes[index, 0];

@@ -41,6 +41,68 @@ public class EnemyGrid : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Network.enemyMatrix != null)
+        {
+            GenerateComponents();
+
+            Network.enemyMatrix = null;
+        }
+
+        if (Network.enemyGraph != null)
+        {
+            GenerateGraphPoints();
+
+            Network.enemyGraph = null;
+        }
+    }
+
+    // Actualizamos los sprites de la matriz
+    private void GenerateComponents()
+    {
+        for (int col = 0; col < cols; col++)
+        {
+            for (int row = 0; row < rows; row++)
+            {
+                if (Network.enemyMatrix[col, row] == -1) continue;
+
+                AddComponent(matrix[col, row], (int)Network.enemyMatrix[col, row]);
+            }
+        }
+    }
+
+    // Generamos las lineas
+    private void GenerateGraphPoints()
+    {
+        // Validamos que lleguen puntos correctos
+        if (Network.enemyGraph.Length % 2 != 0)
+        {
+            Debug.Log("Data de grafos incorrecta...");
+
+            return;
+        }
+
+        GameObject refLine = (GameObject)Instantiate(Resources.Load("Line"), ComponentsContainer);
+
+        // Generamos las lineas
+        for (int i = 0; i < Network.enemyGraph.Length; i += 4)
+        {
+            int col1 = (int)Network.enemyGraph[i];
+            int row1 = (int)Network.enemyGraph[i + 1];
+            int col2 = (int)Network.enemyGraph[i + 2];
+            int row2 = (int)Network.enemyGraph[i + 3];
+
+            GameObject tile1 = matrix[col1, row1];
+            GameObject tile2 = matrix[col2, row2];
+
+            GameObject currentLine = Instantiate(refLine);
+
+            LineRenderer line = currentLine.GetComponent<LineRenderer>();
+
+            line.SetPosition(0, tile1.transform.position);
+            line.SetPosition(1, tile2.transform.position);
+        }
+
+        Destroy(refLine);
     }
 
     private void GenerateMatrix()
@@ -71,5 +133,55 @@ public class EnemyGrid : MonoBehaviour
             }
 
         Destroy(reference);
+    }
+
+
+    private void AddComponent(GameObject tile, int index)
+    {
+        Point point = tile.GetComponent<Point>();
+
+        int col = point.getPoint()[0];
+        int row = point.getPoint()[1];
+
+        Debug.Log(col.ToString() + ", " + row.ToString());
+
+        if (PlayerSet[col, row])
+        {
+            Debug.Log("Espacio ocupado...");
+            return;
+        }
+
+        // Validamos que sea un espacio valido
+        int[,] sizes = ComponentSize;
+
+        bool outBoundsCol = cols <= col + sizes[index, 0] - 1;
+        bool outBoundsRow = rows <= row + sizes[index, 1] - 1;
+
+        if (outBoundsCol || outBoundsRow)
+        {
+            Debug.Log("Espacios fuera de la matriz....");
+
+            return;
+        }
+
+        // Agregamos la imagen y la reescalamos
+        Debug.Log("Agregando imagen...");
+
+        PlayerMatrix[col, row] = index;
+        PlayerSet[col, row] = true;
+        PlayerSet[col + sizes[index, 0] - 1, row + sizes[index, 1] - 1] = true;
+
+        GameObject img = (GameObject)Instantiate(Resources.Load("tileImg"), tile.transform);
+
+        float width = sizes[index, 1];
+        float height = sizes[index, 0];
+
+        img.transform.localScale = new Vector2(width * 0.8f, height * 0.8f);
+
+        img.transform.localPosition = new Vector2(width - 1.2f, height - 1.2f);
+
+        SpriteRenderer renderer = img.GetComponent<SpriteRenderer>();
+
+        renderer.sprite = ComponentImages[index];
     }
 }
