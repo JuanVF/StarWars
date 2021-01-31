@@ -7,13 +7,25 @@ public class GameController : MonoBehaviour
 {
     public static int lastTurn = -1;
     public static int lastCurrentTurn = -1;
+    public static int lastcurrentMoney = 0;
+    public static int lastcurrentSteel = -1;
+
+    public static string lastEnemyName = "";
 
     private Text playerTurn;
     private Text currentTurn;
+    private Text currentMoney;
+    private Text currentSteel;
+    private Text enemyName;
 
     private GameObject chatContainer;
+    private GameObject attacksContainer;
+
     private Button chatButton;
     private Text chatText;
+
+    public Sprite[] attacks;
+    public string[] attacksName;
 
     void Start()
     {
@@ -21,6 +33,10 @@ public class GameController : MonoBehaviour
         currentTurn = GameObject.Find("CurrentTurn").GetComponent<Text>();
         chatButton = GameObject.Find("ChatButton").GetComponent<Button>();
         chatText = GameObject.Find("ChatText").GetComponent<Text>();
+        currentSteel = GameObject.Find("PlayerSteel").GetComponent<Text>();
+        currentMoney = GameObject.Find("PlayerMoney").GetComponent<Text>();
+        enemyName = GameObject.Find("EnemyName").GetComponent<Text>();
+        attacksContainer = GameObject.Find("AttackContainer");
 
         chatContainer = GameObject.Find("ChatContainer");
 
@@ -29,6 +45,8 @@ public class GameController : MonoBehaviour
         chatButton.onClick.AddListener(delegate {
             OnBtnChatClicked();
         });
+
+        GenerateAttacks();
     }
 
     void Update()
@@ -43,6 +61,25 @@ public class GameController : MonoBehaviour
         {
             SetCurrentTurn();
             lastCurrentTurn = Network.currentTurn;
+        }
+
+        if (lastcurrentMoney != Network.money)
+        {
+            SetCurrentMoney();
+            lastcurrentMoney = (int) Network.money;
+        }
+
+        if (lastcurrentSteel != Network.steel)
+        {
+            SetCurrentSteel();
+            lastcurrentSteel = (int) Network.steel;
+        }
+
+        if (lastEnemyName != Network.enemyName)
+        {
+            SetCurrentEnemy();
+
+            lastEnemyName = Network.enemyName;
         }
 
         if (Network.chatMessage != "")
@@ -84,6 +121,24 @@ public class GameController : MonoBehaviour
         currentTurn.text = "Turno actual: " + Network.currentTurn;
     }
 
+    // Asigna el turno actual en pantalla
+    private void SetCurrentMoney()
+    {
+        currentMoney.text = "Acero: " + Network.steel;
+    }
+
+    // Asigna el turno actual en pantalla
+    private void SetCurrentSteel()
+    {
+        currentSteel.text = "Dinero: $" + Network.money;
+    }
+
+    // Asigna el turno actual en pantalla
+    private void SetCurrentEnemy()
+    {
+        enemyName.text = "Enemigo: " + Network.enemyName;
+    }
+
     // Se notifica al server de que ya cambiamos de escena
     private void notifyServer()
     {
@@ -93,5 +148,11 @@ public class GameController : MonoBehaviour
         };
 
         Network.getInstance().SendMessage(message);
+    }
+
+    // Se generan los ataques
+    private void GenerateAttacks()
+    {
+        GameObject reference = (GameObject) Instantiate(Resources.Load("Attack"), attacksContainer.transform);
     }
 }

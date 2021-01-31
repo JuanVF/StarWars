@@ -16,6 +16,7 @@ public class Network
 
     public static string name { get; set; }
     public static float money = 4000;
+    public static float steel = 0;
 
     public static float[,] matrix { get; set; }
     public static int amount_users = 2;
@@ -26,6 +27,11 @@ public class Network
     public static int turn = -1;
     public static int currentTurn = -1;
     public static bool isTurn = false;
+
+    public static string enemyName = "";
+    public static int enemyTurn = -1;
+    public static float[,] enemyMatrix = null;
+    public static float[] enemyGraph = null;
 
     public static string chatMessage = "";
 
@@ -139,6 +145,35 @@ public class Network
                 points += " ]";
 
                 Debug.Log(points);
+
+                message = new Message
+                {
+                    idMessage = "PLAYER_INIT"
+                };
+
+                SendMessage(message);
+
+                break;
+            case "PLAYER_INIT":
+                money = messageAvailable.numbers[0];
+                steel = messageAvailable.numbers[1];
+
+                message = new Message
+                {
+                    idMessage = "ENEMY_INIT"
+                };
+
+                SendMessage(message);
+
+                break;
+            case "ENEMY_INIT":
+                enemyTurn = (int) messageAvailable.number;
+                enemyName = messageAvailable.text;
+                enemyMatrix = messageAvailable.matrix;
+
+                Debug.Log("Datos del enemigo: ");
+                Debug.Log("Nombre: " + enemyName);
+                Debug.Log("ID: " + enemyTurn);
 
                 message = new Message
                 {
